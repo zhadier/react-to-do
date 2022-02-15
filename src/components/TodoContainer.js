@@ -4,12 +4,12 @@ import TodosList from './TodosList';
 import Header from './Header';
 import InputTodo from './InputTodo';
 
-function getInitialTodos() {
+const getInitialTodos = () => {
   // getting stored items
   const temp = localStorage.getItem('todos');
   const savedTodos = JSON.parse(temp);
   return savedTodos || [];
-}
+};
 
 const TodoContainer = () => {
   const [todos, setTodos] = useState(getInitialTodos());
