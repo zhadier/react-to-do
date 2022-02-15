@@ -1,8 +1,14 @@
 import React from 'react';
+import { PropTypes } from 'prop-types';
 import TodoItem from './TodoItem';
 
 const TodosList = (props) => {
-  const { todos, handleChangeProps, deleteTodoProps, setUpdateProps } = props;
+  const {
+    todos,
+    handleChangeProps,
+    deleteTodoProps,
+    setUpdate,
+  } = props;
   return (
     <ul>
       {todos.map((todo) => (
@@ -11,7 +17,7 @@ const TodosList = (props) => {
           todo={todo}
           handleChangeProps={handleChangeProps}
           deleteTodoProps={deleteTodoProps}
-          setUpdate={setUpdateProps}
+          setUpdate={setUpdate}
         />
       ))}
     </ul>
@@ -19,8 +25,11 @@ const TodosList = (props) => {
 };
 
 TodosList.propTypes = {
-  todos: React.propTypes.string.isRequired,
-  handleChangeProps,
+  // eslint-disable-next-line react/forbid-prop-types
+  todos: PropTypes.any.isRequired,
+  handleChangeProps: PropTypes.func.isRequired,
+  deleteTodoProps: PropTypes.func.isRequired,
+  setUpdate: PropTypes.func.isRequired,
 };
 
 export default TodosList;

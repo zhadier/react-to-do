@@ -1,31 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import TodosList from './TodosList';
 import Header from './Header';
 import InputTodo from './InputTodo';
 
+function getInitialTodos() {
+  // getting stored items
+  const temp = localStorage.getItem('todos');
+  const savedTodos = JSON.parse(temp);
+  return savedTodos || [];
+}
+
 const TodoContainer = () => {
-  const [todos, setTodos] = useState([
-    {
-      id: 1,
-      title: 'Setup development environment',
-      completed: true,
-    },
-    {
-      id: 2,
-      title: 'Develop website and add content',
-      completed: false,
-    },
-    {
-      id: 3,
-      title: 'Deploy to live server',
-      completed: false,
-    },
-  ]);
+  const [todos, setTodos] = useState(getInitialTodos());
+
+  useEffect(() => {
+    // storing todos items
+    const temp = JSON.stringify(todos);
+    localStorage.setItem('todos', temp);
+  }, [todos]);
 
   const handleChange = (id) => {
-    setTodos((prevState) => ({
-      todos: prevState.todos.map((todo) => {
+    setTodos((prevState) => (
+      prevState.map((todo) => {
         if (todo.id === id) {
           return {
             ...todo,
@@ -33,36 +30,35 @@ const TodoContainer = () => {
           };
         }
         return todo;
-      }),
-    }));
+      })
+    ));
   };
 
   const delTodo = (id) => {
-    setTodos({
-      todos: [...todos.filter((todo) => todo.id !== id)],
-    });
+    setTodos([...todos.filter((todo) => todo.id !== id)]);
   };
 
-  const addTodoItem = (title) => {
+  const addTodoItem = (title1) => {
     const newTodo = {
       id: uuidv4(),
-      title,
+      title: title1,
       completed: false,
     };
-    setTodos({
-      todos: [...todos, newTodo],
-    });
+    setTodos([...todos, newTodo]);
   };
 
   const setUpdate = (updatedTitle, id) => {
-    setTodos((todos) => {
+    setTodos((todos) => (
       todos.map((todo) => {
         if (todo.id === id) {
-          todo.title = updatedTitle;
+          return {
+            ...todo,
+            title: updatedTitle,
+          };
         }
         return todo;
-      });
-    });
+      })
+    ));
   };
 
   return (
@@ -71,7 +67,7 @@ const TodoContainer = () => {
         <Header />
         <InputTodo addTodoProps={addTodoItem} />
         <TodosList
-          setUpdateProps={setUpdate}
+          setUpdate={setUpdate}
           todos={todos}
           deleteTodoProps={delTodo}
           handleChangeProps={handleChange}

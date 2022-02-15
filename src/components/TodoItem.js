@@ -1,9 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { PropTypes } from 'prop-types';
 import styles from './TodoItem.module.css';
 
 const TodoItem = (props) => {
-  const { setUpdate, title, completed, handleChangeProps, id, deleteTodoProps } = props;
   const [editing, setEditing] = useState(false);
+
+  useEffect(() => console.log('Cleaning up...'), []);
+
+  const {
+    setUpdate,
+    todo,
+    handleChangeProps,
+    deleteTodoProps,
+  } = props;
+
+  const { title, id, completed } = todo;
+
   const completedStyle = {
     fontStyle: 'italic',
     color: '#595959',
@@ -15,14 +27,14 @@ const TodoItem = (props) => {
     setEditing(true);
   };
 
-  handleUpdatedDone = (event) => {
+  const handleUpdatedDone = (event) => {
     if (event.key === 'Enter') {
       setEditing(false);
     }
   };
 
-  let viewMode = {};
-  let editMode = {};
+  const viewMode = {};
+  const editMode = {};
 
   if (editing) {
     viewMode.display = 'none';
@@ -41,7 +53,6 @@ const TodoItem = (props) => {
             handleChangeProps(id);
           }}
         />
-        {title}
         <button type="button" onClick={() => deleteTodoProps(id)}>
           Delete
         </button>
@@ -61,9 +72,15 @@ const TodoItem = (props) => {
   );
 };
 
-export default TodoItem;
-
 TodoItem.propTypes = {
-  title: React.propTypes.string.isRequired,
-  checked: PropTypes.string.isRequired,
+  setUpdate: PropTypes.func.isRequired,
+  todo: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    completed: PropTypes.bool.isRequired,
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+  handleChangeProps: PropTypes.func.isRequired,
+  deleteTodoProps: PropTypes.func.isRequired,
 };
+
+export default TodoItem;
